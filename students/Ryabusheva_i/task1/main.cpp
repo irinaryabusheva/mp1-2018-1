@@ -4,12 +4,17 @@
 using namespace std;
 class Rational
 {
-	int p; //числитель
-	int q; //знаменатель
+	int p; 
+	int q; 
 	int Nod(int a, int b);
 public:
-	Rational(int _p = 0, int _q = 1) : p(_p), q(_q) {};
-	Rational Sum(const Rational &s)
+	Rational(int _p = 0, int _q = 1) : p(_p), q(_q) {
+		int c;
+		c = Nod(p, q);
+		p = p/c;
+		q = q/c;
+	};
+	Rational operator+(const Rational &s)
 	{
 		int c;
 		Rational tmp;
@@ -22,8 +27,8 @@ public:
 		tmp.p = tmp.p / c;
 		tmp.q = tmp.q / c;
 		return tmp;
-	};// сумма
-	Rational Sub(const Rational &s)
+	};
+	Rational operator-(const Rational &s)
 	{
 		int c;
 		Rational tmp;
@@ -36,8 +41,8 @@ public:
 		tmp.p = tmp.p / c;
 		tmp.q = tmp.q / c;
 		return tmp;
-	};// вычитание
-	Rational Mult(const Rational&s)
+	};
+	Rational operator*(const Rational&s)
 	{
 		int c;
 		Rational tmp;
@@ -50,8 +55,8 @@ public:
 		tmp.p = tmp.p / c;
 		tmp.q = tmp.q / c;
 		return tmp;
-	};// умножение
-	Rational Div(const Rational &s)
+	};
+	Rational operator/(const Rational &s)
 	{
 		int c;
 		Rational tmp;
@@ -64,12 +69,12 @@ public:
 		tmp.p = tmp.p / c;
 		tmp.q = tmp.q / c;
 		return tmp;
-	};// деление
+	};
 	void Print() const
 	{
 		cout << "(" << p << "/" << q << ")" "\n";
 	};
-	Rational operator=(const Rational &s)
+	Rational& operator=(const Rational &s)
 	{
 		p = s.p;
 		q = s.q;
@@ -89,7 +94,7 @@ int Rational::Nod(int a, int b)
 		}
 	}
 	return nod;
-}// нод
+}
 
 void main()
 {
@@ -97,19 +102,19 @@ void main()
 	R1.Print();
 	R2.Print();
 
-	R3 = R1.Sum(R2);
+	R3 = R1+R2;
 	cout << "sum = ";
 	R3.Print();
 
-	R3 = R1.Sub(R2);
+	R3 = R1-R2;
 	cout << "sub =";
 	R3.Print();
 
-	R3 = R1.Mult(R2);
+	R3 = R1*R2;
 	cout << "mult = ";
 	R3.Print();
 
-	R3 = R1.Div(R2);
+	R3 = R1/R2;
 	cout << "div = ";
 	R3.Print();
 
