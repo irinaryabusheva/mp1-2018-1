@@ -14,7 +14,7 @@ public:
 	double GetKoef(int);
 	double Calculate(double);
 	void Print();
-	void derivative();
+	Polynom derivative();
 };
 
 Polynom::Polynom() {
@@ -39,7 +39,7 @@ Polynom& Polynom::operator = (const Polynom &s)
 {
 	if (this == &s)
 		return *this;
-	if (koef != s.koef) {
+	if (this != &s) {
 		delete[] koef;
 		koef = new double[deg + 1];
 	}
@@ -69,28 +69,15 @@ double Polynom::Calculate(double x)
 	return sum;
 }
 
-void Polynom::derivative() {
-	double p;
-	int tmp;
-	tmp = deg;
-	p = deg * koef[0];
-	deg--;
-	cout << p << "*(x^" << deg << ")";
-	for (int i = 1; i < tmp - 1; i++)
+Polynom Polynom::derivative() {
+	int i;
+	Polynom Z(deg - 1);
+	for (i = 0; i <= deg - 1; i++)
 	{
-		p = deg * koef[i];
-		deg--;
-		if (p>0)
-			cout << "+" << p << "*(x^" << deg << ")";
-		else
-			cout << p << "*(x^" << deg << ")";
+		Z.koef[i] = (i + 1)*koef[i + 1];
 	}
-	if (koef[tmp - 1] > 0)
-		cout << "+" << koef[tmp - 1] << "\n";
-	else
-		cout << koef[tmp - 1] << "\n";
+	returne Z;
 }
-
 
 void Polynom::Print()
 {
@@ -125,5 +112,6 @@ void main()
 	cin >> x;
 	cout << P.Calculate(x) << "\n";
 	P.derivative();
+	P.Print();
 	system("pause");
 }
