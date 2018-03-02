@@ -1,116 +1,110 @@
 #include <iostream>
 #include <math.h>
 using namespace std;
-class Polynom
+class Rational
 {
-	int deg;
-	double *koef;;
+	int p;
+	int q;
+	int Nod(int a, int b);
 public:
-	Polynom(int k, double arr[]);
-	~Polynom();
-	Polynom& operator = (const Polynom &);
-	int GetDeg();
-	double GetKoef(int);
-	double Calculate(double);
-	/*Polynom derivative();*/
-	void Print();
-	void derivative();
+	Rational(int _p = 0, int _q = 1) : p(_p), q(_q) {
+		int c;
+		c = Nod(p, q);
+		p = p / c;
+		q = q / c;	
+	};
+	Rational operator+(const Rational &s){
+		int c;
+		Rational tmp;
+		tmp.p = p*s.q + q*s.p;
+		tmp.q = q*s.q;
+		if (tmp.p>tmp.q)
+			 c = Nod(tmp.p, tmp.q);
+		else
+			 c = Nod(tmp.q, tmp.p);
+		tmp.p = tmp.p / c;
+		tmp.q = tmp.q / c;
+		return tmp;
+		};
+	Rational operator-(const Rational &s){
+		int c;
+		Rational tmp;
+		tmp.p = p*s.q - q*s.p;
+		tmp.q = q*s.q;
+		if (tmp.p > tmp.q)
+			 c = Nod(tmp.p, tmp.q);
+		else
+			 c = Nod(tmp.q, tmp.p);
+		tmp.p = tmp.p / c;
+		tmp.q = tmp.q / c;
+		return tmp;
+	};
+	Rational operator*(const Rational&s) {
+	    int c;
+	    Rational tmp;
+		tmp.p = p*s.p;
+		tmp.q = q*s.q;
+		if (tmp.p>tmp.q)
+			 c = Nod(tmp.p, tmp.q);
+		else
+			 c = Nod(tmp.q, tmp.p);
+		tmp.p = tmp.p / c;
+		tmp.q = tmp.q / c;
+		return tmp;
+	};
+	Rational operator/(const Rational &s){
+		int c;
+		Rational tmp;
+		tmp.p = p*s.q;
+		tmp.q = q*s.p;
+		if (tmp.p>tmp.q)
+			c = Nod(tmp.p, tmp.q);
+		else
+			c = Nod(tmp.q, tmp.p);
+		tmp.p = tmp.p / c;
+		tmp.q = tmp.q / c;
+		return tmp;
+	};
+	void Print() const{
+		cout << "(" << p << "/" << q << ")" "\n";
+	};
+	Rational& operator=(const Rational &s){
+		p = s.p;
+		q = s.q;
+		return *this;
+	};
 };
 
-Polynom::Polynom(int k, double arr[]) {
-	koef = new double[k + 1];
-	deg = k;
-	for (int i = 0; i <= k; i++)
-		koef[i] = arr[i];
-}
-
-Polynom::~Polynom()
-{
-	delete[] koef;
-}
-
-Polynom& Polynom::operator = (const Polynom &s)
-{
-	if (this == &s)
-		return *this;
-	if (koef != s.koef) {
-		delete[] koef;
-		koef = new double[deg + 1];
-	}
-	for (int i = 0; i <= deg; i++)
-		koef[i] = s.koef[i];
-	koef = s.koef;
-	return *this;
-}
-
-int Polynom::GetDeg()
-{
-	return deg;
-}
-
-double Polynom::GetKoef(int i) {
-	if (i <= deg)
-		return koef[i];
-	else
-		return 0.0;
-}
-
-double Polynom::Calculate(double x)
-{
-	double sum = 0;
-	for (int i = 0; i <= deg; i++)
-		sum += koef[i] * pow(x, deg - i);
-	return sum;
-}
-
-void Polynom::derivative() {
-	//cout << deg * koef[0] << "*(x^" << deg -1 << ")";
-	for (int i = 0; i < deg - 1; i++)
+int Rational::Nod(int a, int b){
+	int nod = 1;
+	for (int i = a; i > 0; i--)
 	{
-		koef[i] = (deg - i)*koef[i + 1];
-		if (koef[i]>0)
-			cout << "+" << koef[i] << "*(x^" << deg - i - 1 << ")";
-		else
-			cout << koef[i] << "*(x^" << deg - i - 1 << ")";
+		if (a % i == 0 && b % i == 0)
+		 {
+			nod = i;
+			break;
+		}
 	}
-	//cout << deg * koef[deg - 1]<<endl;
+	return nod;
 }
+void main(){
+	Rational R1(5, 9), R2(4, 6), R3;
+	R1.Print();
+	R2.Print();
 
+	R3 = R1 + R2;
+	cout << "sum = ";
+	R3.Print();
+	R3 = R1 - R2;
+	cout << "sub =";
+	R3.Print();
 
-void Polynom::Print()
-{
-	cout << koef[0] << "*(x^" << deg << ")";
-	for (int i = 1; i < deg; i++)
-	{
-		if (koef[i]>0)
-			cout << "+" << koef[i] << "*(x^" << deg - i << ")";
-		else
-			cout << koef[i] << "*(x^" << deg - i << ")";
-	}
-	if (koef[deg] > 0)
-		cout << "+" << koef[deg];
-	else
-		cout << koef[deg] << "\n";
-
-}
-void main()
-{
-	int n;
-	double a[12];
-	cout << "deg=";
-	cin >> n;
-	for (int i = 0; i <= n; i++) {
-		cout << "koef[" << i << "] = ";
-		cin >> a[i];
-		cout << "\n";
-	}
-	Polynom P(n, a);
-	P.Print();
-	double x;
-	cout << "\n" << "x=";
-	cin >> x;
-	cout << "\n" << P.Calculate(x) << "\n";
-	P.derivative();
-	//днаюбэ
+	R3 = R1*R2;
+	cout << "mult = ";
+	R3.Print();
+	
+	R3 = R1 / R2;
+	cout << "div = ";
+	R3.Print();
 	system("pause");
-}
+	}
