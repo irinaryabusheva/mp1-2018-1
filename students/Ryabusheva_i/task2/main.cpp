@@ -9,7 +9,7 @@ public:
 	Polynom();
 	Polynom(int k, double arr[]);
 	~Polynom();
-	Polynom& operator = (const Polynom &);
+	Polynom & operator = (const Polynom &);
 	int GetDeg();
 	double GetKoef(int);
 	double Calculate(double);
@@ -35,7 +35,7 @@ Polynom::~Polynom()
 	delete[] koef;
 }
 
-Polynom& Polynom::operator = (const Polynom &s)
+Polynom & Polynom::operator = (const Polynom &s)
 {
 	if (this == &s)
 		return *this;
@@ -70,13 +70,14 @@ double Polynom::Calculate(double x)
 }
 
 Polynom Polynom::derivative() {
-	int i;
-	Polynom Z(deg - 1);
-	for (i = 0; i <= deg - 1; i++)
+	double* arr = new double[deg + 1];
+	for (int i = 0; i < deg; i++)
 	{
-		Z.koef[i] = (i + 1)*koef[i + 1];
+		arr[i] = (koef[i] * (deg -i));
 	}
-	returne Z;
+	Polynom *tmp = new Polynom(deg - 1, arr);
+	delete[] arr;
+	return *tmp;
 }
 
 void Polynom::Print()
@@ -84,12 +85,12 @@ void Polynom::Print()
 	cout << koef[0] << "*(x^" << deg << ")";
 	for (int i = 1; i < deg; i++)
 	{
-		if (koef[i]>0)
+		if (koef[i] >= 0)
 			cout << "+" << koef[i] << "*(x^" << deg - i << ")";
 		else
 			cout << koef[i] << "*(x^" << deg - i << ")";
 	}
-	if (koef[deg] > 0)
+	if (koef[deg] >= 0)
 		cout << "+" << koef[deg] << "\n";
 	else
 		cout << koef[deg] << "\n";
@@ -111,7 +112,7 @@ void main()
 	cout << "x=";
 	cin >> x;
 	cout << P.Calculate(x) << "\n";
-	P.derivative();
-	P.Print();
+	Polynom P1 = P.derivative();
+	P1.Print();
 	system("pause");
 }
