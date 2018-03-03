@@ -6,7 +6,6 @@ class Polynom
 	int deg;
 	double *koef;;
 public:
-	Polynom();
 	Polynom(int k, double arr[]);
 	~Polynom();
 	Polynom & operator = (const Polynom &);
@@ -17,11 +16,6 @@ public:
 	Polynom derivative();
 };
 
-Polynom::Polynom() {
-	deg = 0;
-	for (int i = 0; i <= deg; i++)
-		koef[i] = 0;
-}
 
 Polynom::Polynom(int k, double arr[]) {
 	koef = new double[k + 1];
@@ -39,7 +33,7 @@ Polynom & Polynom::operator = (const Polynom &s)
 {
 	if (this == &s)
 		return *this;
-	if (this != &s) {
+	if (deg != s.deg) {
 		delete[] koef;
 		koef = new double[deg + 1];
 	}
