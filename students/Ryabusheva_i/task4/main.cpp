@@ -84,16 +84,21 @@ public:
 	Scales(vector <Person> cl) { scale = cl; }
 
 	~Scales() {};
-	void SetWeight(int _f, int _day, int _month, int _year, double _weight)
+	void SetWeight( int _day, int _month, int _year, double _weight, string _name)
 	{
-		for (unsigned int j = 0; j < scale[_f].obs.size(); j++)
+		for (unsigned int i = 0; i < scale.size(); i++)
 		{
-			scale[_f].obs[j].date.day = _day;
-			scale[_f].obs[j].date.month = _month;
-			scale[_f].obs[j].date.year = _year;
-			scale[_f].obs[j].weight = _weight;
+			if (scale[i].name == _name)
+			{
+				for (unsigned int j = 0; j < scale[i].obs.size(); j++)
+				{
+					if (scale[i].obs[j].date.day == _day && scale[i].obs[j].date.month == _month && scale[i].obs[j].date.year == _year)
+					{
+						scale[i].obs[j].weight = _weight;
+					}
+				}
+			}
 		}
-
 	}
 
 	void SetStartDate(int _day, int _month, int _year)
@@ -130,9 +135,10 @@ public:
 			return 0;
 	};
 
-	void AddName(Person name)
+	void AddName(string name)
 	{
-		scale.push_back(name);
+		Person p;
+		scale.push_back(p);
 	};
 
 	double AvgWeightAll(string _name)
@@ -176,7 +182,7 @@ public:
 
 	double MinWeightAll(string _name)
 	{
-		double min = 0;
+		double min = 1000;
 		for (unsigned int i = 0; i < scale.size(); i++)
 		{
 			if (scale[i].name == _name)
@@ -192,7 +198,7 @@ public:
 	};
 	double MinWeightMonth(string _name, int _month, int _year)
 	{
-		double min = 0;
+		double min = 1000;
 		for (unsigned int i = 0; i < scale.size(); i++)
 		{
 			if (scale[i].name == _name)
@@ -304,13 +310,14 @@ int main()
 		cout << "1 - Add new person\n" << endl;
 		cout << "2 - Set Start Date\n" << endl;
 		cout << "3 - Get Start Date\n" << endl;
-		cout << "4 - Get Weight\n" << endl;
-		cout << "5 - Average Weight\n" << endl;
-		cout << "6 - Min Weight\n" << endl;
-		cout << "7 - Max Weight\n" << endl;
-		cout << "8 - Input File\n" << endl;
-		cout << "9 - Output File\n" << endl;
-		cout << "10 - Exit\n" << endl;
+		cout << "4 - Set Weight\n" << endl;
+		cout << "5 - Get Weight\n" << endl;
+		cout << "6 - Average Weight\n" << endl;
+		cout << "7 - Min Weight\n" << endl;
+		cout << "8 - Max Weight\n" << endl;
+		cout << "9 - Input File\n" << endl;
+		cout << "10 - Output File\n" << endl;
+		cout << "11 - Exit\n" << endl;
 		cin >> op;
 		switch (op)
 		{
@@ -340,6 +347,8 @@ int main()
 		}
 		case 4:
 		{
+			cout << "Enter name";
+			cin >> name;
 			cout << "Enter day: ";
 			cin >> day;
 			cout << "Enter month: ";
@@ -348,7 +357,7 @@ int main()
 			cin >> year;
 			cout << "Enter weight: ";
 			cin >> weight;
-			W.SetWeight(f, day, month, year, weight);
+			W.SetWeight(day, month, year, weight, name);
 			break;
 		}
 		case 5:
