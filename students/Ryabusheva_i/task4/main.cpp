@@ -54,15 +54,41 @@ struct Person
 {
 	string name;
 	vector <Weight> obs;
+	Person(string _name) : name(_name) {};
+	Person(string _name, vector <Weight> n) {
+		name = _name;
+		obs = n;
+	};
 	Person& operator=(const Person& n)
 	{
 		obs = n.obs;
 		name = n.name;
 		return *this;
 	}
-	int GetSizeWeight()
+	int Search(int _day, int _month, int _year)
 	{
-		return obs.size();
+		for (unsigned int j = 0; j < obs.size(); j++)
+		{
+			if (obs[j].date.day == _day && obs[j].date.month == _month && obs[j].date.year == _year)
+			{
+				return j;
+			}
+		}
+		return -1;
+	}
+	void observation(int _day, int _month, int _year, double _weight)
+	{
+		if (Search(_day, _month, _year) == -1)
+		{
+			Date d(_day, _month, _year);
+			Weight w(d, _weight);
+			obs.push_back(w);
+		}
+		else
+		{
+			obs[Search(_day, _month, _year)].weight = _weight;
+		}
+
 	}
 	friend ostream& operator<<(ostream& os, Person& obj);
 };
@@ -81,23 +107,16 @@ class Scales
 	vector <Person> scale;
 public:
 	Scales() {};
-	Scales(vector <Person> cl) { scale = cl; }
+	Scales(vector <Person> cl) { scale = cl;}
 
 	~Scales() {};
+	
 	void SetWeight( int _day, int _month, int _year, double _weight, string _name)
 	{
 		for (unsigned int i = 0; i < scale.size(); i++)
 		{
 			if (scale[i].name == _name)
-			{
-				for (unsigned int j = 0; j < scale[i].obs.size(); j++)
-				{
-					if (scale[i].obs[j].date.day == _day && scale[i].obs[j].date.month == _month && scale[i].obs[j].date.year == _year)
-					{
-						scale[i].obs[j].weight = _weight;
-					}
-				}
-			}
+				scale[i].observation(_day, _month, _year, _weight);
 		}
 	}
 
@@ -113,7 +132,7 @@ public:
 		return weightStartDate;
 	};
 
-	double GetWeight(int day, int month, int year, string _name)
+	double GetWeight(int _day, int _month, int _year, string _name)
 	{
 		if (scale.size() > 0)
 		{
@@ -121,13 +140,7 @@ public:
 			{
 				if (scale[i].name == _name)
 				{
-					for (unsigned int j = 0; j < scale[i].obs.size(); j++)
-					{
-						if (scale[i].obs[j].date.day == day && scale[i].obs[j].date.month == month && scale[i].obs[j].date.year == year)
-						{
-							return scale[i].obs[j].weight;
-						}
-					}
+					return scale[i].obs[scale[i].Search( _day,  _month, _year)].weight;
 				}
 			}
 		}
@@ -137,7 +150,7 @@ public:
 
 	void AddName(string name)
 	{
-		Person p;
+		Person p(name);
 		scale.push_back(p);
 	};
 
@@ -303,7 +316,6 @@ int main()
 	int op, a;
 	bool menu = 1;
 	string name;
-	int f = 1;
 	while (menu)
 	{
 		system("cls");
@@ -325,7 +337,7 @@ int main()
 		{
 			cout << "Add name: ";
 			cin >> name;
-			f++;
+			W.AddName(name);
 			break;
 		}
 		case 2:
@@ -347,7 +359,7 @@ int main()
 		}
 		case 4:
 		{
-			cout << "Enter name";
+			cout << "Enter name: ";
 			cin >> name;
 			cout << "Enter day: ";
 			cin >> day;
@@ -362,7 +374,7 @@ int main()
 		}
 		case 5:
 		{
-			cout << "Enter name";
+			cout << "Enter name: ";
 			cin >> name;
 			cout << "Enter day: ";
 			cin >> day;
@@ -376,7 +388,7 @@ int main()
 		}
 		case 6:
 		{
-			cout << "Enter name" << endl;
+			cout << "Enter name: " << endl;
 			cin >> name;
 			cout << "1 - all observation" << endl;
 			cout << "2 - in chosen month" << endl;
@@ -410,7 +422,7 @@ int main()
 		}
 		case 7:
 		{
-			cout << "Enter name" << endl;
+			cout << "Enter name: " << endl;
 			cin >> name;
 			cout << "1 - all observation" << endl;
 			cout << "2 - in chosen month" << endl;
@@ -444,7 +456,7 @@ int main()
 		}
 		case 8:
 		{
-			cout << "Enter name" << endl;
+			cout << "Enter name: " << endl;
 			cin >> name;
 			cout << "1 - all observation" << endl;
 			cout << "2 - in chosen month" << endl;
